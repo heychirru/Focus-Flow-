@@ -1,74 +1,122 @@
-# FocusFlow AI - Microservices Edition
+# FocusFlow AI — Modular Monolith
 
-A personal productivity platform with a deep work timer, AI coaching, and a flashcard study coach. The project is built as Spring Boot microservices plus a JavaFX desktop client.
+FocusFlow is a personal productivity platform with a deep-work timer, AI coaching, and an AI-powered flashcard study coach. The backend is now a **single Spring Boot application** with modular Session, Study, and Coach features, plus the JavaFX desktop client.
 
 ## Architecture
 
 ```text
 JavaFX Desktop Client
-        | HTTP REST
-        v
-API Gateway :8080
-        |
-   +----+-------------------+-------------------+
-   v                        v                   v
-Session Service :8081   AI Coach :8082   Study Service :8083
-(PostgreSQL)            (Claude)         (PostgreSQL + Claude)
+        │ HTTP REST
+        ▼
+FocusFlow Backend :8080
+ ├── Session module
+ ├── Study module
+ ├── AI Coach module
+ ├── Tags & statistics
+ └── CORS
+        │
+        ▼
+Spring Data JPA
+        │
+        ├── PostgreSQL (DB_TYPE=postgres)
+        └── MySQL      (DB_TYPE=mysql)
 ```
 
-## Quick Start
+Only **one database is active per application startup**. Select it with `DB_TYPE`.
 
-### Prerequisites
+## Prerequisites
 
 - Java 21
 - Maven 3.9+
-- Docker Desktop 24+
+- MySQL 8+ or PostgreSQL 14+
 - Git
 
-### 1. Configure environment
+Docker is not required.
+
+## 1. Configure the database
+
+Copy the environment template:
 
 ```bash
 cp .env.example .env
-# Edit .env and set ANTHROPIC_API_KEY
 ```
 
-### 2. Start the backend stack
+### PostgreSQL
+
+```text
+DB_TYPE=postgres
+DB_URL=jdbc:postgresql://localhost:5432/focusflow
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+```
+
+Create the database first:
+
+```sql
+CREATE DATABASE focusflow;
+```
+
+### MySQL
+
+```text
+DB_TYPE=mysql
+DB_URL=jdbc:mysql://localhost:3306/focusflow?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
+
+Create the database first:
+
+```sql
+CREATE DATABASE focusflow;
+```
+
+The backend contains both JDBC drivers, but Spring Boot connects only to the database selected by `DB_TYPE`.
+
+## 2. Configure AI features
+
+Set your Anthropic key in `.env`:
+
+```text
+ANTHROPIC_API_KEY=sk-ant-your-key-here
+```
+
+AI features require this key; normal session/tag/statistics features do not.
+
+## 3. Start the backend
+
+From the repository root:
 
 ```bash
-docker compose up --build
+mvn -pl backend spring-boot:run
 ```
 
-### 3. Compile the whole monorepo
+The API is available at:
+
+```text
+http://localhost:8080
+```
+
+You can also build everything with:
 
 ```bash
-mvn compile
+mvn clean package
 ```
 
-### 4. Verify services
+## 4. Run the JavaFX client
 
-```bash
-curl http://localhost:8080/api/sessions/stats
-curl http://localhost:8080/api/study/decks
-curl http://localhost:8080/api/coach/insights/latest
-```
-
-### 5. Run the JavaFX client
+In another terminal:
 
 ```bash
 cd javafx-client
 mvn javafx:run
 ```
 
-## Services
+The client continues to use the same `/api/...` endpoints on port `8080`, so no gateway or service ports are required.
 
-| Service | Port | Description |
-|---|---:|---|
-| API Gateway | 8080 | Routes `/api/*` requests and handles CORS |
-| Session Service | 8081 | Sessions, tags, stats, weekly trends, CSV export |
-| AI Coach Service | 8082 | Claude-powered coaching insights |
-| Study Service | 8083 | Flashcard decks and AI generation |
+## API Endpoints
 
-## Key API Endpoints
+### Sessions
 
 ```text
 POST   /api/sessions
@@ -77,14 +125,23 @@ PUT    /api/sessions/{id}/cancel
 GET    /api/sessions
 GET    /api/sessions/stats
 GET    /api/sessions/stats/weekly
+GET    /api/sessions/summary
 GET    /api/sessions/tags
 POST   /api/sessions/tags
 PUT    /api/sessions/tags/{id}
 GET    /api/sessions/export
+```
 
+### AI Coach
+
+```text
 POST   /api/coach/insights
 GET    /api/coach/insights/latest
+```
 
+### Study Coach
+
+```text
 GET    /api/study/decks
 POST   /api/study/decks/generate
 GET    /api/study/decks/{id}/cards
@@ -92,36 +149,49 @@ PATCH  /api/study/cards/{id}/known
 DELETE /api/study/decks/{id}
 ```
 
-## Useful Commands
-
-```bash
-docker compose up --build
-docker compose up -d
-docker compose down
-docker compose logs -f
-
-mvn compile
-mvn -pl session-service spring-boot:run
-mvn -pl coach-service spring-boot:run
-mvn -pl study-service spring-boot:run
-```
-
-## Recent roadmap progress
-
-- Session history now supports pagination and CSV export.
-- The timer screen now includes a custom tag editor with create, rename, and recolor flows.
-- The stats dashboard now renders a weekly focus chart.
-- Study mode now includes a client-side multiple-choice quiz flow for decks.
-
 ## Project Structure
 
 ```text
-api-gateway/
-session-service/
-coach-service/
-study-service/
-javafx-client/
-tasks/
-docker-compose.yml
-pom.xml
+Focus-Flow-/
+├── backend/
+│   ├── pom.xml
+│   └── src/main/
+│       ├── java/com/focusflow/
+│       │   ├── FocusFlowApplication.java
+│       │   ├── config/
+│       │   ├── session/
+│       │   ├── study/
+│       │   └── coach/
+│       └── resources/
+│           └── application.yml
+├── javafx-client/
+├── tasks/
+├── .env.example
+├── pom.xml
+└── README.md
 ```
+
+## Database Selection
+
+Change only the environment variables before starting the backend:
+
+```text
+DB_TYPE=postgres
+```
+
+or:
+
+```text
+DB_TYPE=mysql
+```
+
+The schema is managed by Hibernate with `ddl-auto=update` by default.
+
+## Migration Notes
+
+- Removed the API Gateway from the runtime architecture.
+- Combined Session, Study, and AI Coach into one Spring Boot application.
+- Preserved the existing `/api/...` REST contract for the JavaFX client.
+- AI Coach now calls the Session module directly instead of making an internal HTTP request.
+- Added startup selection between MySQL and PostgreSQL.
+- Removed Docker Compose and Docker-specific startup instructions.
