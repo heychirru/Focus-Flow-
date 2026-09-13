@@ -1,0 +1,127 @@
+# FocusFlow AI — Microservices Edition Task List
+
+## Project Overview
+Build **FocusFlow AI v2.0** — a personal productivity platform re-architected from a monolithic JavaFX + SQLite app into a distributed microservices system.
+
+**Stack:** Java 21 · Spring Boot 3.2 · JavaFX 21 · PostgreSQL 16 · Docker Compose · Anthropic Claude (Sonnet 4.6)
+
+---
+
+## Phase 1 — v2.0 Alpha: Session Service + Infrastructure (Week 1–2)
+
+### 1.1 Project Scaffolding
+- [x] Create monorepo directory structure: `api-gateway/`, `session-service/`, `coach-service/`, `study-service/`, `javafx-client/`
+- [x] Initialize Maven [pom.xml](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/api-gateway/pom.xml) for each service with correct dependencies
+- [ ] Create [.env.example](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/.env.example) and [.gitignore](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/.gitignore) (exclude `.env`)
+
+### 1.2 Session Service (:8081)
+- [ ] Spring Boot project with `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, `postgresql`, `lombok`
+- [ ] [Session.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/model/Session.java) — JPA entity (`id`, `tag`, `durationMinutes`, `startTime`, `endTime`, `completed`)
+- [ ] [Tag.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/model/Tag.java) — JPA entity (`id`, `name`, `color`)
+- [ ] [SessionRepository.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/session-service/src/main/java/com/focusflow/session/repository/SessionRepository.java) — Spring Data JPA
+- [x] [SessionService.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/session-service/src/main/java/com/focusflow/session/service/SessionService.java) — business logic ([start](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/App.java#11-25), [complete](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/session-service/src/main/java/com/focusflow/session/controller/SessionController.java#28-33), [cancel](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/session-service/src/main/java/com/focusflow/session/controller/SessionController.java#34-39), [buildStats](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/session-service/src/main/java/com/focusflow/session/service/SessionService.java#93-125), [buildTextSummary](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/session-service/src/main/java/com/focusflow/session/service/SessionService.java#155-186))
+- [x] [SessionController.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/session-service/src/main/java/com/focusflow/session/controller/SessionController.java) endpoints:
+  - [x] `POST /api/sessions` — create/start session
+  - [x] `PUT /api/sessions/{id}/complete`
+  - [x] `PUT /api/sessions/{id}/cancel`
+  - [x] `GET /api/sessions` (with `limit`, `offset`, `tag` query params)
+  - [x] `GET /api/sessions/stats` — aggregate stats JSON
+  - [x] `GET /api/sessions/summary` — plain-text summary for AI Coach
+  - [x] `GET /api/sessions/tags` — list tags
+  - [x] `POST /api/sessions/tags` — create tag
+- [x] PostgreSQL schema: `sessions` + `tags` tables
+- [x] [application.yml](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/api-gateway/src/main/resources/application.yml) / `application.properties` with datasource config
+
+### 1.3 Docker Compose
+- [x] [docker-compose.yml](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/docker-compose.yml) with all services: `api-gateway`, `session-service`, `coach-service`, `study-service`, `session-db`, `coach-db`, `study-db`
+- [x] Volumes for persistent PostgreSQL data (`session-data`, `study-data`)
+- [x] Environment variable wiring (`ANTHROPIC_API_KEY`, DB credentials, `SESSION_SERVICE_URL`)
+- [x] [Dockerfile](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/api-gateway/Dockerfile) for each Spring Boot service
+
+---
+
+## Phase 2 — v2.0 Beta: AI Coach + Study Coach + Gateway (Week 3)
+
+### 2.1 API Gateway (:8080)
+- [x] Spring Cloud Gateway project
+- [x] [application.yml](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/api-gateway/src/main/resources/application.yml) routing rules:
+  - `/api/sessions/**` → `session-service:8081`
+  - `/api/coach/**` → `coach-service:8082`
+  - `/api/study/**` → `study-service:8083`
+- [x] Global CORS configuration (allow all origins, methods, headers)
+
+### 2.2 AI Coach Service (:8082)
+- [x] Spring Boot project (stateless — no DB)
+- [x] [ClaudeApiClient.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/study-service/src/main/java/com/focusflow/study/client/ClaudeApiClient.java) — Java `HttpClient` wrapper for Anthropic REST API
+  - Headers: `x-api-key`, `anthropic-version: 2023-06-01`, `Content-Type: application/json`
+  - 60s timeout
+- [x] [AiCoachService.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/coach-service/src/main/java/com/focusflow/coach/service/AiCoachService.java) — fetch session summary from Session Service, call Claude, return insights
+  - System prompt: warm coaching tone, data-driven insights (200–300 words)
+  - Cache last response to avoid redundant API calls
+- [x] [AiCoachController.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/controller/AiCoachController.java) endpoints:
+  - [x] `POST /api/coach/insights` — generate new coaching report
+  - [x] `GET /api/coach/insights/latest` — return cached report (404 if none)
+- [x] [application.yml](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/api-gateway/src/main/resources/application.yml) with `ANTHROPIC_API_KEY` and `SESSION_SERVICE_URL` env vars
+
+### 2.3 Study Coach Service (:8083)
+- [x] Spring Boot project with JPA + PostgreSQL + Gson
+- [x] [Deck.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/model/Deck.java) + [Flashcard.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/model/Flashcard.java) JPA entities
+- [x] PostgreSQL schema: `decks` + `flashcards` tables (FK cascade delete)
+- [x] [StudyCoachService.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/study-service/src/main/java/com/focusflow/study/service/StudyCoachService.java) — [generateDeck()](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/study-service/src/main/java/com/focusflow/study/service/StudyCoachService.java#48-83):
+  - Send source text to Claude with structured JSON prompt
+  - Parse `{"cards":[{"question":"...","answer":"..."}]}` response
+  - Persist deck + cards
+- [x] [StudyController.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/controller/StudyController.java) endpoints:
+  - [x] `GET /api/study/decks` — list all decks
+  - [x] `POST /api/study/decks/generate` — generate deck from source text via Claude
+  - [x] `GET /api/study/decks/{id}/cards` — get cards for a deck
+  - [x] `PATCH /api/study/cards/{id}/known` — update known status
+  - [x] `DELETE /api/study/decks/{id}` — cascading delete
+
+---
+
+## Phase 3 — v2.0 RC: JavaFX Client Refactor (Week 4)
+
+### 3.1 JavaFX Client
+- [x] [ApiClient.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/service/ApiClient.java) — shared REST client using Java `HttpClient` + Gson
+  - `BASE_URL = "http://localhost:8080"`
+  - [getAsync(path, type)](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/service/ApiClient.java#44-67) → `CompletableFuture<T>`
+  - [postAsync(path, body, type)](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/service/ApiClient.java#91-116) → `CompletableFuture<T>`
+  - [putAsync(path, body, type)](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/service/ApiClient.java#117-140) → `CompletableFuture<T>`
+- [x] Remove all SQLite references from existing code
+- [x] [TimerController.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/controller/TimerController.java) — async session start/complete/cancel via [ApiClient](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/service/ApiClient.java#19-186)
+- [x] [StatsController.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/controller/StatsController.java) — load stats from `GET /api/sessions/stats`
+- [x] [HistoryController.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/controller/HistoryController.java) — paginated history from `GET /api/sessions`
+- [x] [AiCoachController.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/controller/AiCoachController.java) — call `POST /api/coach/insights` async (show loading state)
+- [x] [StudyController.java](file:///c:/Users/chira/Desktop/%E2%98%95%20Focus%20Flow/javafx-client/src/main/java/com/focusflowai/controller/StudyController.java) — deck list, generate deck, flip cards, mark known
+- [x] All API calls use `CompletableFuture` + `Platform.runLater()` for thread safety
+- [x] UX: dark theme (navy/charcoal + red accent `#E94560`), Inter/Segoe UI fonts, monospace timer
+
+---
+
+## Phase 4 — v2.0 Final: Integration + Polish (Week 5)
+
+- [x] End-to-end integration testing (Timer → Session Service → AI Coach flow)
+- [x] `docker compose up --build` → all services healthy on first run
+- [x] Verify PostgreSQL data persists across service restarts
+- [x] Health check curl commands pass for all endpoints
+- [x] Error responses follow standard envelope `{status, error, message, timestamp}`
+- [x] README / developer setup documentation
+
+---
+
+## Phase 5 — v2.1 Features (Month 2)
+- [ ] CSV export of session history
+- [ ] Custom tags UI (create, rename, color-code)
+- [ ] Quiz mode (multiple-choice from deck)
+- [ ] Weekly chart view (JavaFX Charts)
+
+---
+
+## Success Criteria (v2.0)
+- [ ] All 3 backend services start with `docker compose up`
+- [ ] JavaFX client connects to Gateway and completes full session flow end-to-end
+- [ ] AI Coach returns insights in < 10 seconds
+- [ ] Study Coach generates 5-card deck from 500 words in < 15 seconds
+- [ ] Session data survives service restarts
+- [ ] Zero breaking changes to JavaFX UI when backend redeploys

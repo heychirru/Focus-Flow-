@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.focusflowai.controller.TimerController"
+      styleClass="view-pane"
+      spacing="20">
+
+    <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
+
+    <VBox spacing="18" alignment="CENTER" HBox.hgrow="ALWAYS">
+        <HBox spacing="18" alignment="CENTER">
+            <Label fx:id="streakLabel" text="Streak: 0 days" styleClass="stat-chip"/>
+            <Label fx:id="todayLabel" text="Today: 0 min" styleClass="stat-chip"/>
+            <Label fx:id="selectedTagPreview" text="No tag selected" styleClass="tag-preview"/>
+        </HBox>
+
+        <Label fx:id="timerLabel" text="25:00" styleClass="timer-display"/>
+        <Label fx:id="statusLabel" text="Set your session and click Start" styleClass="status-label"/>
+
+        <HBox spacing="18" alignment="CENTER">
+            <VBox spacing="6" alignment="CENTER_LEFT">
+                <Label text="Tag" styleClass="form-label"/>
+                <ComboBox fx:id="tagCombo" prefWidth="220" styleClass="combo-box"/>
+            </VBox>
+            <VBox spacing="6" alignment="CENTER_LEFT">
+                <Label text="Duration (min)" styleClass="form-label"/>
+                <Spinner fx:id="durationSpinner" prefWidth="120" styleClass="spinner"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="12" alignment="CENTER">
+            <Button fx:id="startBtn" text="Start" onAction="#onStart" styleClass="btn-primary" prefWidth="120"/>
+            <Button fx:id="pauseBtn" text="Pause" onAction="#onPause" styleClass="btn-secondary" prefWidth="120"/>
+            <Button fx:id="stopBtn" text="Stop" onAction="#onStop" styleClass="btn-danger" prefWidth="120"/>
+        </HBox>
+    </VBox>
+
+    <VBox spacing="12" styleClass="editor-card" minWidth="280" maxWidth="320">
+        <Label text="Custom Tags" styleClass="section-title"/>
+        <Label text="Create, rename, and recolor the categories used in the timer." styleClass="meta-label" wrapText="true"/>
+
+        <ListView fx:id="tagListView" VBox.vgrow="ALWAYS" prefHeight="220" styleClass="deck-list"/>
+
+        <VBox spacing="6">
+            <Label text="Tag Name" styleClass="form-label"/>
+            <TextField fx:id="tagNameField" promptText="Reading, Deep Work, Research..." styleClass="text-field"/>
+        </VBox>
+
+        <VBox spacing="6">
+            <Label text="Color" styleClass="form-label"/>
+            <ColorPicker fx:id="tagColorPicker"/>
+        </VBox>
+
+        <HBox spacing="10">
+            <Button text="New" onAction="#onNewTag" styleClass="btn-secondary" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            <Button text="Create Tag" onAction="#onCreateTag" styleClass="btn-primary" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        </HBox>
+
+        <Button text="Save Changes" onAction="#onSaveTag" styleClass="btn-secondary" maxWidth="Infinity"/>
+    </VBox>
+
+</HBox>

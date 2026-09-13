@@ -1,0 +1,313 @@
+/* ── FocusFlow AI - Dark Theme ─────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+.root {
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    -fx-background-color: #0D1117;
+    -fx-text-fill: #E6EDF3;
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────────────── */
+.sidebar {
+    -fx-background-color: #161B22;
+    -fx-padding: 20 12 20 12;
+    -fx-border-color: #30363D;
+    -fx-border-width: 0 1 0 0;
+}
+
+.app-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #E94560;
+    -fx-padding: 0 0 20 4;
+}
+
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8B949E;
+    -fx-font-size: 13px;
+    -fx-padding: 10 12;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+.nav-btn:hover {
+    -fx-background-color: #21262D;
+    -fx-text-fill: #E6EDF3;
+}
+
+/* ── Content pane ──────────────────────────────────────────────────────── */
+.content-pane {
+    -fx-background-color: #0D1117;
+}
+
+.view-pane {
+    -fx-background-color: #0D1117;
+}
+
+/* ── Timer view ─────────────────────────────────────────────────────────── */
+.timer-display {
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 96px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #E6EDF3;
+}
+
+.stat-chip {
+    -fx-background-color: #21262D;
+    -fx-text-fill: #58A6FF;
+    -fx-padding: 6 14;
+    -fx-background-radius: 20;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
+
+/* ── Labels ─────────────────────────────────────────────────────────────── */
+.view-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #E6EDF3;
+}
+
+.section-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #8B949E;
+    -fx-padding: 6 0 2 0;
+}
+
+.status-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #8B949E;
+}
+
+.form-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #8B949E;
+}
+
+.meta-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #484F58;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.btn-primary {
+    -fx-background-color: #E94560;
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-font-size: 13px;
+    -fx-padding: 10 20;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+.btn-primary:hover {
+    -fx-background-color: #C73652;
+}
+.btn-primary:disabled {
+    -fx-opacity: 0.5;
+}
+
+.btn-secondary {
+    -fx-background-color: #21262D;
+    -fx-text-fill: #E6EDF3;
+    -fx-font-size: 13px;
+    -fx-padding: 10 20;
+    -fx-background-radius: 6;
+    -fx-border-color: #30363D;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+}
+.btn-secondary:hover {
+    -fx-background-color: #30363D;
+}
+
+.btn-danger {
+    -fx-background-color: #3D1F1F;
+    -fx-text-fill: #FF7979;
+    -fx-font-size: 13px;
+    -fx-padding: 10 20;
+    -fx-background-radius: 6;
+    -fx-border-color: #7D3030;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+}
+.btn-danger:hover {
+    -fx-background-color: #5A2828;
+}
+
+/* ── Inputs ──────────────────────────────────────────────────────────────── */
+.text-field, .text-area, .source-area {
+    -fx-background-color: #161B22;
+    -fx-text-fill: #E6EDF3;
+    -fx-border-color: #30363D;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 13px;
+    -fx-prompt-text-fill: #484F58;
+}
+.text-field:focused, .text-area:focused, .source-area:focused {
+    -fx-border-color: #E94560;
+}
+
+.combo-box {
+    -fx-background-color: #161B22;
+    -fx-border-color: #30363D;
+    -fx-border-radius: 6;
+    -fx-text-fill: #E6EDF3;
+}
+
+.spinner .text-field {
+    -fx-background-color: #161B22;
+    -fx-text-fill: #E6EDF3;
+}
+
+/* ── Stats ───────────────────────────────────────────────────────────────── */
+.stat-card {
+    -fx-background-color: #161B22;
+    -fx-padding: 16 20;
+    -fx-background-radius: 10;
+    -fx-border-color: #30363D;
+    -fx-border-radius: 10;
+    -fx-min-width: 110;
+}
+
+.stat-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #8B949E;
+}
+
+.stat-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #58A6FF;
+}
+
+.tag-stat-row {
+    -fx-background-color: #161B22;
+    -fx-text-fill: #E6EDF3;
+    -fx-padding: 8 12;
+    -fx-background-radius: 6;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 12px;
+}
+
+.tags-section {
+    -fx-padding: 4 0;
+}
+
+/* ── History table ─────────────────────────────────────────────────────────── */
+.history-table {
+    -fx-background-color: #161B22;
+    -fx-border-color: #30363D;
+    -fx-background-radius: 8;
+}
+
+.history-table .column-header {
+    -fx-background-color: #21262D;
+    -fx-text-fill: #8B949E;
+    -fx-font-weight: 600;
+    -fx-font-size: 12px;
+}
+
+.history-table .table-row-cell {
+    -fx-background-color: #161B22;
+    -fx-text-fill: #E6EDF3;
+}
+
+.history-table .table-row-cell:hover {
+    -fx-background-color: #21262D;
+}
+
+/* ── AI Coach ──────────────────────────────────────────────────────────────── */
+.insights-area {
+    -fx-background-color: #161B22;
+    -fx-text-fill: #E6EDF3;
+    -fx-border-color: #30363D;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 4;
+}
+
+/* ── Study / Flashcard ─────────────────────────────────────────────────────── */
+.deck-list {
+    -fx-background-color: #161B22;
+    -fx-border-color: #30363D;
+    -fx-background-radius: 8;
+}
+
+.deck-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #E6EDF3;
+    -fx-font-size: 13px;
+    -fx-padding: 8 12;
+}
+
+.deck-list .list-cell:selected {
+    -fx-background-color: #E94560;
+    -fx-text-fill: white;
+}
+
+.flashcard-box {
+    -fx-background-color: #161B22;
+    -fx-padding: 30;
+    -fx-background-radius: 12;
+    -fx-border-color: #30363D;
+    -fx-border-radius: 12;
+    -fx-min-height: 200;
+}
+
+.card-question {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #E6EDF3;
+    -fx-text-alignment: CENTER;
+}
+
+.card-answer {
+    -fx-font-size: 16px;
+    -fx-text-fill: #58A6FF;
+    -fx-text-alignment: CENTER;
+}
+
+.editor-card {
+    -fx-background-color: #161B22;
+    -fx-padding: 18;
+    -fx-background-radius: 12;
+    -fx-border-color: #30363D;
+    -fx-border-radius: 12;
+}
+
+.tag-preview {
+    -fx-background-color: #21262D;
+    -fx-text-fill: #E6EDF3;
+    -fx-padding: 8 14;
+    -fx-background-radius: 999;
+    -fx-font-weight: 600;
+}
+
+.weekly-chart {
+    -fx-background-color: #161B22;
+    -fx-padding: 12;
+    -fx-border-color: #30363D;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.weekly-chart .chart-plot-background {
+    -fx-background-color: #0D1117;
+}
+
+.weekly-chart .axis-label,
+.weekly-chart .chart-title,
+.weekly-chart .axis {
+    -fx-text-fill: #E6EDF3;
+}
+
+.quiz-option {
+    -fx-wrap-text: true;
+    -fx-alignment: CENTER_LEFT;
+    -fx-min-height: 44;
+}

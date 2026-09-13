@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.focusflowai.controller.AiCoachController"
+      styleClass="view-pane" spacing="16">
+
+    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <Label text="🤖 AI Coach" styleClass="view-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="generateBtn" text="✨ Get AI Coaching"
+                onAction="#onGenerate" styleClass="btn-primary"/>
+    </HBox>
+
+    <Label fx:id="statusLabel"     text="Click to get personalized insights" styleClass="status-label"/>
+    <Label fx:id="generatedAtLabel" text="" styleClass="meta-label"/>
+
+    <TextArea fx:id="insightsArea" VBox.vgrow="ALWAYS"
+              wrapText="true" editable="false"
+              promptText="Your AI coaching insights will appear here…"
+              styleClass="insights-area"/>
+
+</VBox>

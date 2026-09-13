@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.focusflowai.controller.StatsController"
+      styleClass="view-pane"
+      spacing="16">
+
+    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <Label text="Stats Dashboard" styleClass="view-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Refresh" onAction="#onRefresh" styleClass="btn-secondary"/>
+    </HBox>
+
+    <Label fx:id="statusLabel" text="" styleClass="status-label"/>
+
+    <HBox spacing="16">
+        <VBox styleClass="stat-card" spacing="4">
+            <Label text="Total Sessions" styleClass="stat-label"/>
+            <Label fx:id="totalSessionsLabel" text="-" styleClass="stat-value"/>
+        </VBox>
+        <VBox styleClass="stat-card" spacing="4">
+            <Label text="Total Focus" styleClass="stat-label"/>
+            <Label fx:id="totalHoursLabel" text="-" styleClass="stat-value"/>
+        </VBox>
+        <VBox styleClass="stat-card" spacing="4">
+            <Label text="Today" styleClass="stat-label"/>
+            <Label fx:id="todayMinLabel" text="-" styleClass="stat-value"/>
+        </VBox>
+        <VBox styleClass="stat-card" spacing="4">
+            <Label text="Streak" styleClass="stat-label"/>
+            <Label fx:id="streakLabel" text="-" styleClass="stat-value"/>
+        </VBox>
+        <VBox styleClass="stat-card" spacing="4">
+            <Label text="Completion" styleClass="stat-label"/>
+            <Label fx:id="completionRateLabel" text="-" styleClass="stat-value"/>
+        </VBox>
+    </HBox>
+
+    <Label text="Top Tags" styleClass="section-title"/>
+    <VBox fx:id="topTagsBox" styleClass="tags-section" spacing="6"/>
+
+    <Label text="Weekly Focus Trend" styleClass="section-title"/>
+    <BarChart fx:id="weeklyChart" title="Last 7 Days" animated="false" legendVisible="true" VBox.vgrow="ALWAYS" styleClass="weekly-chart">
+        <xAxis>
+            <CategoryAxis label="Day"/>
+        </xAxis>
+        <yAxis>
+            <NumberAxis label="Minutes"/>
+        </yAxis>
+    </BarChart>
+
+</VBox>

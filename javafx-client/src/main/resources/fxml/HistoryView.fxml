@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.focusflowai.controller.HistoryController"
+      styleClass="view-pane"
+      spacing="16">
+
+    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <Label text="Session History" styleClass="view-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <ComboBox fx:id="tagFilterCombo" prefWidth="180" styleClass="combo-box"/>
+        <Label fx:id="pageLabel" text="Page 1" styleClass="status-label"/>
+        <Button fx:id="prevBtn" text="Prev" onAction="#onPrevPage" styleClass="btn-secondary"/>
+        <Button fx:id="nextBtn" text="Next" onAction="#onNextPage" styleClass="btn-secondary"/>
+        <Button text="Export CSV" onAction="#onExportCsv" styleClass="btn-primary"/>
+        <Button text="Refresh" onAction="#onRefresh" styleClass="btn-secondary"/>
+    </HBox>
+
+    <Label fx:id="statusLabel" text="" styleClass="status-label"/>
+
+    <TableView fx:id="historyTable" VBox.vgrow="ALWAYS" styleClass="history-table">
+        <columns>
+            <TableColumn fx:id="idCol" text="ID" prefWidth="60"/>
+            <TableColumn fx:id="tagCol" text="Tag" prefWidth="140"/>
+            <TableColumn fx:id="durationCol" text="Min" prefWidth="80"/>
+            <TableColumn fx:id="startCol" text="Started" prefWidth="180"/>
+            <TableColumn fx:id="statusCol" text="Status" prefWidth="140"/>
+        </columns>
+    </TableView>
+
+</VBox>

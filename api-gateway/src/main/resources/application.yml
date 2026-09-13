@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: session-service
+          uri: http://session-service:8081
+          predicates:
+            - Path=/api/sessions/**
+
+        - id: coach-service
+          uri: http://coach-service:8082
+          predicates:
+            - Path=/api/coach/**
+
+        - id: study-service
+          uri: http://study-service:8083
+          predicates:
+            - Path=/api/study/**
+
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            maxAge: 3600
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

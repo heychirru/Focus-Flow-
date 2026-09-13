@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.focusflowai.controller.MainController"
+            styleClass="root-pane">
+
+    <!-- Left sidebar navigation -->
+    <left>
+        <VBox styleClass="sidebar" spacing="4" minWidth="160">
+            <Label text="☕ FocusFlow" styleClass="app-title"/>
+
+            <Button text="⏱  Timer"   onAction="#showTimer"   styleClass="nav-btn" maxWidth="Infinity"/>
+            <Button text="📊  Stats"   onAction="#showStats"   styleClass="nav-btn" maxWidth="Infinity"/>
+            <Button text="📋  History" onAction="#showHistory" styleClass="nav-btn" maxWidth="Infinity"/>
+            <Button text="🤖  AI Coach" onAction="#showCoach" styleClass="nav-btn" maxWidth="Infinity"/>
+            <Button text="📚  Study"   onAction="#showStudy"   styleClass="nav-btn" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <!-- Main content area -->
+    <center>
+        <StackPane fx:id="contentPane" styleClass="content-pane"/>
+    </center>
+
+</BorderPane>

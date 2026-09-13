@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.focusflow</groupId>
+    <artifactId>focusflow-monorepo</artifactId>
+    <version>2.0.0</version>
+    <packaging>pom</packaging>
+    <name>FocusFlow Monorepo</name>
+
+    <modules>
+        <module>api-gateway</module>
+        <module>session-service</module>
+        <module>coach-service</module>
+        <module>study-service</module>
+        <module>javafx-client</module>
+    </modules>
+</project>
