@@ -8,7 +8,7 @@
     <artifactId>javafx-client</artifactId>
     <version>2.0.0</version>
     <name>FocusFlow JavaFX Desktop Client</name>
-    <description>JavaFX desktop frontend — consumes API Gateway REST endpoints</description>
+    <description>JavaFX desktop frontend — consumes the FocusFlow monolith REST API</description>
     <packaging>jar</packaging>
 
     <properties>
@@ -21,7 +21,6 @@
     </properties>
 
     <dependencies>
-        <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -32,13 +31,11 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
-        <!-- Gson for REST responses -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
         </dependency>
-        <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
