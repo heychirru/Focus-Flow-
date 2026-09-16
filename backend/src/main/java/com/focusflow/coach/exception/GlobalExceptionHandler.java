@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-@RestControllerAdvice
+@RestControllerAdvice("com.focusflow.coach.controller")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
