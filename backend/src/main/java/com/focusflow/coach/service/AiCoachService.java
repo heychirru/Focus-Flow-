@@ -1,6 +1,6 @@
 package com.focusflow.coach.service;
 
-import com.focusflow.coach.client.ClaudeApiClient;
+import com.focusflow.coach.client.CoachClaudeApiClient;
 import com.focusflow.coach.dto.InsightsResponse;
 import com.focusflow.session.service.SessionService;
 import org.springframework.stereotype.Service;
@@ -20,11 +20,11 @@ public class AiCoachService {
             Be specific - reference actual numbers from the data. 200-300 words total.
             """;
 
-    private final ClaudeApiClient claudeClient;
+    private final CoachClaudeApiClient claudeClient;
     private final SessionService sessionService;
     private InsightsResponse cachedInsights;
 
-    public AiCoachService(ClaudeApiClient claudeClient, SessionService sessionService) {
+    public AiCoachService(CoachClaudeApiClient claudeClient, SessionService sessionService) {
         this.claudeClient = claudeClient;
         this.sessionService = sessionService;
     }
