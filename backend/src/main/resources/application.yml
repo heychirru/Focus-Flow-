@@ -3,7 +3,11 @@ server:
 
 spring:
   config:
-    import: optional:file:.env[.properties]
+    # Maven's spring-boot:run executes the backend from backend/.
+    # The project's local .env lives one level above it, at the repository root.
+    import:
+      - optional:file:../.env[.properties]
+      - optional:file:.env[.properties]
   application:
     name: focusflow
   profiles:
@@ -34,8 +38,10 @@ spring:
     activate:
       on-profile: mysql
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/focusflow?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
-    username: ${DB_USERNAME:root}
+    # Keep the local development connection deterministic. This avoids a stale
+    # global DB_USERNAME/DB_URL environment variable overriding the project .env.
+    url: jdbc:mysql://localhost:3306/focusflow?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: focusflow
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
