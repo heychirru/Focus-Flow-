@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.focusflow.study.client.ClaudeApiClient;
+import com.focusflow.study.client.StudyClaudeApiClient;
 import com.focusflow.study.dto.GenerateDeckRequest;
 import com.focusflow.study.dto.UpdateKnownRequest;
 import com.focusflow.study.model.Deck;
@@ -29,17 +29,15 @@ public class StudyCoachService {
 
     private final DeckRepository deckRepository;
     private final FlashcardRepository flashcardRepository;
-    private final ClaudeApiClient claudeClient;
+    private final StudyClaudeApiClient claudeClient;
 
     public StudyCoachService(DeckRepository deckRepository,
                              FlashcardRepository flashcardRepository,
-                             ClaudeApiClient claudeClient) {
+                             StudyClaudeApiClient claudeClient) {
         this.deckRepository = deckRepository;
         this.flashcardRepository = flashcardRepository;
         this.claudeClient = claudeClient;
     }
-
-    // ── Deck Operations ────────────────────────────────────────────────────────
 
     public List<Deck> findAllDecks() {
         return deckRepository.findAllByOrderByCreatedAtDesc();
@@ -59,7 +57,6 @@ public class StudyCoachService {
         String userPrompt = "Generate flashcards from this text:\n\n" + req.sourceText();
         String rawJson = claudeClient.complete(SYSTEM_PROMPT, userPrompt);
 
-        // Parse Claude's JSON response
         JsonObject responseObj = JsonParser.parseString(rawJson.trim()).getAsJsonObject();
         JsonArray cards = responseObj.getAsJsonArray("cards");
 
@@ -67,12 +64,10 @@ public class StudyCoachService {
             throw new RuntimeException("Claude returned no flashcards");
         }
 
-        // Save deck
         Deck deck = new Deck();
         deck.setTitle(req.title());
         deck = deckRepository.save(deck);
 
-        // Save cards
         for (var element : cards) {
             JsonObject card = element.getAsJsonObject();
             Flashcard fc = new Flashcard();
@@ -93,8 +88,6 @@ public class StudyCoachService {
         }
         deckRepository.deleteById(id);
     }
-
-    // ── Flashcard Operations ───────────────────────────────────────────────────
 
     public List<Flashcard> findCardsByDeck(Long deckId) {
         if (!deckRepository.existsById(deckId)) {
