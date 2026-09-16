@@ -18,8 +18,8 @@ FocusFlow Backend :8080
         ▼
 Spring Data JPA
         │
-        ├── PostgreSQL (DB_TYPE=postgres)
-        └── MySQL      (DB_TYPE=mysql)
+        ├── MySQL      (DB_TYPE=mysql, default)
+        └── PostgreSQL (DB_TYPE=postgres)
 ```
 
 Only **one database is active per application startup**. Select it with `DB_TYPE`.
@@ -41,13 +41,15 @@ Copy the environment template:
 cp .env.example .env
 ```
 
-### PostgreSQL
+Spring Boot is configured to load the local `.env` file automatically. The `.env` file is ignored by Git, so keep your real password and API key there.
+
+### MySQL (default)
 
 ```text
-DB_TYPE=postgres
-DB_URL=jdbc:postgresql://localhost:5432/focusflow
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
+DB_TYPE=mysql
+DB_URL=jdbc:mysql://localhost:3306/focusflow?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+DB_USERNAME=root
+DB_PASSWORD=your_mysql_password
 ```
 
 Create the database first:
@@ -56,13 +58,13 @@ Create the database first:
 CREATE DATABASE focusflow;
 ```
 
-### MySQL
+### PostgreSQL
 
 ```text
-DB_TYPE=mysql
-DB_URL=jdbc:mysql://localhost:3306/focusflow?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-DB_USERNAME=root
-DB_PASSWORD=your_password
+DB_TYPE=postgres
+DB_URL=jdbc:postgresql://localhost:5432/focusflow
+DB_USERNAME=postgres
+DB_PASSWORD=your_postgres_password
 ```
 
 Create the database first:
@@ -173,16 +175,16 @@ Focus-Flow-/
 
 ## Database Selection
 
-Change only the environment variables before starting the backend:
-
-```text
-DB_TYPE=postgres
-```
-
-or:
+The default is MySQL:
 
 ```text
 DB_TYPE=mysql
+```
+
+To use PostgreSQL instead:
+
+```text
+DB_TYPE=postgres
 ```
 
 The schema is managed by Hibernate with `ddl-auto=update` by default.
@@ -195,3 +197,4 @@ The schema is managed by Hibernate with `ddl-auto=update` by default.
 - AI Coach now calls the Session module directly instead of making an internal HTTP request.
 - Added startup selection between MySQL and PostgreSQL.
 - Removed Docker Compose and Docker-specific startup instructions.
+- Added automatic local `.env` loading for database and AI configuration.
